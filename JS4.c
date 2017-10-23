@@ -5,6 +5,7 @@
 
 #define NAMELENGTH 32
 #define MAXFILESEC 64
+
 extern int dinit();
 extern int rsector(int t,int s,unsigned char *b);
 extern int wsector(int t,int s,unsigned char *b);
@@ -46,16 +47,48 @@ struct __Lfile{ //linked list for files
     struct __Lfile *prev;
 };
 
-int finit(){ //inits file system
+struct LEmptyNode {
+    int startTrack;
+    int startSector;
+    int endTrack;
+    int endSector;
+    
+    struct LEmptyNode *next;
+    struct LEmptyNode *prev;
+};
+
+struct LEmptyList {
+    int numEmptyNodes;
+    struct LEmptyNode *head;
+    struct LEmptyNode *tail;
+};
+
+void finit(){ //inits file system
     //read the disk meta data in
-    printf("Size of __file %d\n",sizeof(struct __file));
-    printf("Size of __Lfile %d\n",sizeof(struct __Lfile));
+
+    //initialize the empty space list with a
+    // node that covers all of tracks 1-127
+    struct LEmptyList emptySpaceList;
+    struct LEmptyNode godEmptyNode;
+
+    godEmptyNode.startTrack=1;
+    godEmptyNode.startSector=0;
+    godEmptyNode.endTrack=127;
+    godEmptyNode.endSector=4095;
+    godEmptyNode.next = NULL;
+    godEmptyNode.prev = NULL;
+
+    emptySpaceList.head = &godEmptyNode;
+    emptySpaceList.tail = emptySpaceList.head;
+
+    printf("Size of __file %d\n", sizeof(struct __file));
+    printf("Size of __Lfile %d\n", sizeof(struct __Lfile));
 }
 
 int dopen(char *fname, char *mode){
 
-    int fle
-    __Lfile tmp = __isfile(fname,&fle);
+    int fle;
+    struct __Lfile *tmp = __isfile(fname,&fle);
 
     if(fle == -1){
         printf("File name to long\n");
@@ -91,7 +124,7 @@ struct __file* __addFile(char *fname){//adds file to linked list of files
     tmp->file->meta_file.last_write_time = time(NULL);
     tmp->prev = NULL;
     tmp->next = NULL;
-    tmp->file->meta_file.name = strdup(fname);
+    tmp->file->meta_file.file_name = strdup(fname);
 
     if(start == NULL){
         start = tmp;
@@ -109,7 +142,7 @@ struct __file* __addFile(char *fname){//adds file to linked list of files
     return tmp;
 }
 
-int highestFD fd;
+int highestFD;
 struct FDLIST *returnedfdList;
 
 struct FDLIST{
