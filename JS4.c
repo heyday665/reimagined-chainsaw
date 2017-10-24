@@ -65,17 +65,15 @@ struct LEmptyList {
     struct LEmptyNode *tail;
 };
 
-int getDistance(int s_S, int s_T, int t_S, int t_T){
+int getDistance(int _s_S, int _s_T, int _t_S, int _t_T){
     int distance = 0;
-    if (s_T == t_T) {
-        if (s_S > t_S) {
-
-        } else {
-            //
-        }
+    if (_s_T == _t_T) {
+        distance = _t_S - _s_S;
     } else {
-        //
+        distance = 4096 * (_t_T - _s_T);
+        distance += _t_S - _s_S;
     }
+    return distance;
 };
 
 void retSectorTrack(struct __LSectorTrack LST){
