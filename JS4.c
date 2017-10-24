@@ -53,6 +53,7 @@ struct LEmptyNode {
     int startSector;
     int endTrack;
     int endSector;
+    int size;
     
     struct LEmptyNode *next;
     struct LEmptyNode *prev;
@@ -64,9 +65,22 @@ struct LEmptyList {
     struct LEmptyNode *tail;
 };
 
+int getDistance(int s_S, int s_T, int t_S, int t_T){
+    int distance = 0;
+    if (s_T == t_T) {
+        if (s_S > t_S) {
+
+        } else {
+            //
+        }
+    } else {
+        //
+    }
+};
+
 void retSectorTrack(struct __LSectorTrack LST){
     // returns the block to empty space
-
+    
 };
 
 int getEmptySpace(int numBlocks) {
@@ -75,6 +89,8 @@ int getEmptySpace(int numBlocks) {
         int nodesToCheck = emptySpaceList.numEmptyNodes;
         struct LEmptyNode* currNode = emptySpaceList.head;
         
+        //Once found a viable block
+
         if (currNode->next) {
             currNode = currNode->next;
         }
@@ -93,6 +109,7 @@ void finit(){ //inits file system
     godEmptyNode.startSector=0;
     godEmptyNode.endTrack=127;
     godEmptyNode.endSector=4095;
+    godEmptyNode.size = getDistance(godEmptyNode.startSector, godEmptyNode.startTrack, godEmptyNode.endSector, godEmptyNode.endTrack);
     godEmptyNode.next = NULL;
     godEmptyNode.prev = NULL;
 
