@@ -9,6 +9,7 @@
 extern int dinit();
 extern int rsector(int t,int s,unsigned char *b);
 extern int wsector(int t,int s,unsigned char *b);
+struct LEmptyList emptySpaceList;
 
 struct __SectorTrack{
     unsigned int sector;
@@ -63,12 +64,29 @@ struct LEmptyList {
     struct LEmptyNode *tail;
 };
 
+void retSectorTrack(struct __LSectorTrack LST){
+    // returns the block to empty space
+
+};
+
+int getEmptySpace(int numBlocks) {
+    // Get a block of empty space of size numBlocks
+    while (1) {
+        int nodesToCheck = emptySpaceList.numEmptyNodes;
+        struct LEmptyNode* currNode = emptySpaceList.head;
+        
+        if (currNode->next) {
+            currNode = currNode->next;
+        }
+        else {break;}
+    }
+};
+
 void finit(){ //inits file system
     //read the disk meta data in
 
     //initialize the empty space list with a
     // node that covers all of tracks 1-127
-    struct LEmptyList emptySpaceList;
     struct LEmptyNode godEmptyNode;
 
     godEmptyNode.startTrack=1;
@@ -83,7 +101,7 @@ void finit(){ //inits file system
 
     printf("Size of __file %d\n", sizeof(struct __file));
     printf("Size of __Lfile %d\n", sizeof(struct __Lfile));
-}
+};
 
 int dopen(char *fname, char *mode){
 
@@ -106,7 +124,7 @@ int dopen(char *fname, char *mode){
         return -1;
     }
 
-}
+};
 
 struct __file* __getFile(char *fname){
     if(strlen(fname) > 32){
@@ -140,7 +158,7 @@ struct __file* __addFile(char *fname){//adds file to linked list of files
 
     __NumFiles++;
     return tmp;
-}
+};
 
 int highestFD;
 struct FDLIST *returnedfdList;
@@ -160,7 +178,7 @@ int dclose(int fd){
     if(fd > highestFD){
         return -1;
     }
-}
+};
 
 struct __Lfile* __isfile(char *fname,int *ret){//-1 fname to long, -2 file does not exist,1 file exists
     if(strlen(fname) > NAMELENGTH){
@@ -188,7 +206,7 @@ struct __Lfile* __isfile(char *fname,int *ret){//-1 fname to long, -2 file does 
 
     *ret = -2;
     return NULL;
-}
+};
 
 int dunlink(char *fname){
     
@@ -262,11 +280,11 @@ int dunlink(char *fname){
 
     
     return 0;
-}
+};
 
 int writeFileMetatoDisk(){
 
-}
+};
 
 
 
