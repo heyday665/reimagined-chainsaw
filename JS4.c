@@ -81,19 +81,49 @@ void retSectorTrack(struct __LSectorTrack LST){
     
 };
 
-int getEmptySpace(int numBlocks) {
+struct __LSectorTrack* getEmptySpace(int numBlocks) {
     // Get a block of empty space of size numBlocks
+    int isDone = 0;
+    struct __LSectorTrack* returnLST;
+    struct __LSectorTrack* pointerMemes;
     while (1) {
         int nodesToCheck = emptySpaceList.numEmptyNodes;
         struct LEmptyNode* currNode = emptySpaceList.head;
         
         //Once found a viable block
+        if (currNode->size >= numBlocks){
+            pointerMemes = returnLST;
+            returnLST = malloc(sizeof(struct __LSectorTrack));
+            struct __LSectorTrack* jim = malloc(sizeof(struct __LSectorTrack));
+            struct __SectorTrack* jimBob = malloc(sizeof(struct __SectorTrack));
+            for (int i = 0; i<(numBlocks); i++) {
+                if (!i) {
+                    pointerMemes->ST->sector = currNode->startSector;
+                    pointerMemes->ST->track = currNode->startTrack;
+                }
+                else {
+                    jim->ST = jimBob;
+                    jimBob->sector = currNode->startSector+i;
+                    jimBob->track = currNode->startTrack;
+                }
+                if (jimBob->sector >= 4096){
+                    jimBob->sector = jimBob->sector - 4096;
+                    jimBob->track = jimBob->track + 1;
+                }
+                pointerMemes->next = jim;
+                pointerMemes = pointerMemes->next;
+            }
+        }
+        if (isDone) break;
 
         if (currNode->next) {
             currNode = currNode->next;
         }
-        else {break;}
+        else {
+            break;
+        }
     }
+    return returnLST;
 };
 
 void finit(){ //inits file system
@@ -107,7 +137,7 @@ void finit(){ //inits file system
     godEmptyNode.startSector=0;
     godEmptyNode.endTrack=127;
     godEmptyNode.endSector=4095;
-    godEmptyNode.size = getDistance(godEmptyNode.startSector, godEmptyNode.startTrack, godEmptyNode.endSector, godEmptyNode.endTrack);
+    godEmptyNode.size = 1 + getDistance(godEmptyNode.startSector, godEmptyNode.startTrack, godEmptyNode.endSector, godEmptyNode.endTrack);
     godEmptyNode.next = NULL;
     godEmptyNode.prev = NULL;
 
@@ -209,13 +239,13 @@ struct __Lfile* __isfile(char *fname,int *ret){//-1 fname to long, -2 file does 
     struct __Lfile *tmp;
     for(tmp = start;tmp->next;tmp = tmp->next){
         if(strcmp(tmp->file->meta_file.file_name,fname) == 0){
-            *ret = 1
+            *ret = 1;
             return tmp;
         }
     }
 
     if(strcmp(tmp->file->meta_file.file_name,fname) == 0){
-        *ret = 1
+        *ret = 1;
         return tmp;
     }
 
@@ -253,7 +283,7 @@ int dunlink(char *fname){
     }else{
         return 0;
     }
-
+    
 
     int __freeFile(struct __Lfile *file,struct __Lfile *prev,struct __Lfile*next){//returns <= 1 on error or 1 on success
         if(prev == NULL && next == NULL){
