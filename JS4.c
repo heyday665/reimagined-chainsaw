@@ -6,6 +6,17 @@
 #define NAMELENGTH 32
 #define MAXFILESEC 64
 
+//DYLAN READ HERE! vvv
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ * Suggest using:                                                          *
+ * 11000001 10010111 11110010 10010101 01101010 11011101 00011101 11010000 *
+ * 00101100 10001100 01000001 10000010 00001111 00011000 01100101 00101011 *
+ * 01100010 01010101 00101001 01000111 01010110 01011000 01011011 11111010 *
+ * 00001101 00111000 01000110 01111111 00000000 10110010 00111000 01000011 *
+ * as the first 32 bytes of our T0,S0 to nearly guarantee disk is new      *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+//Perhaps we could do 64 bytes of data to guarantee?
+
 extern int dinit();
 extern int rsector(int t,int s,unsigned char *b);
 extern int wsector(int t,int s,unsigned char *b);
@@ -65,6 +76,8 @@ struct LEmptyList {
     struct LEmptyNode *tail;
 };
 
+// Gets distance from _s (start) to _t (target)
+// Return is number of sectors
 int getDistance(int _s_S, int _s_T, int _t_S, int _t_T){
     int distance = 0;
     if (_s_T == _t_T) {
@@ -76,9 +89,35 @@ int getDistance(int _s_S, int _s_T, int _t_S, int _t_T){
     return distance;
 };
 
-void retSectorTrack(struct __LSectorTrack LST){
+void retSectorTrack(struct __LSectorTrack* LST){
     // returns the block to empty space
+    int startSector = LST->ST->sector;
+    int startTrack = LST->ST->track;
+    int endSector = -1;
+    int endTrack = -1;
     
+    struct __LSectorTrack* delItr = LST;
+    struct __LSectorTrack* itr = LST;
+    struct LEmptyNode* newEmptyNode = malloc(sizeof(struct LEmptyNode));
+    struct LEmptyNode* currNode = emptySpaceList.head;
+
+    newEmptyNode->startSector = startSector;
+    newEmptyNode->startTrack = startTrack;
+
+    while (1) {
+        if (itr->next) {
+            delItr = itr;
+            itr = itr->next;
+            free(delItr);
+        }
+        else {
+            endSector = itr->ST->sector;
+            endTrack = itr->ST->track;
+            free(itr);
+            break;
+        }
+    }
+    free(LST);
 };
 
 struct __LSectorTrack* getEmptySpace(int numBlocks) {
@@ -113,6 +152,7 @@ struct __LSectorTrack* getEmptySpace(int numBlocks) {
                 pointerMemes->next = jim;
                 pointerMemes = pointerMemes->next;
             }
+            isDone = 1;
         }
         if (isDone) break;
 
@@ -120,6 +160,7 @@ struct __LSectorTrack* getEmptySpace(int numBlocks) {
             currNode = currNode->next;
         }
         else {
+            printf("NO SPACE!\n");
             break;
         }
     }
