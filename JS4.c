@@ -89,7 +89,21 @@ int getDistance(int _s_S, int _s_T, int _t_S, int _t_T){
     return distance;
 };
 
-void retSectorTrack(struct __LSectorTrack* LST){
+/*
+void reCombobulateEmptySpace() {
+    struct LEmptyNode* curr = emptySpaceList.head;
+    while (curr->next) {
+        int currEndSector = curr->endSector;
+        int currEndTrack = curr->endTrack;
+        curr = curr->next;
+        int nextStartSector = curr->startSector;
+        int nextStartTrack = curr->startTrack;
+    }
+    return;
+};
+*/
+
+void retSectorTrack(struct __LSectorTrack* LST) {
     // returns the block to empty space
     int startSector = LST->ST->sector;
     int startTrack = LST->ST->track;
@@ -117,6 +131,17 @@ void retSectorTrack(struct __LSectorTrack* LST){
             break;
         }
     }
+
+    newEmptyNode->endSector = endSector;
+    newEmptyNode->endTrack = endTrack;
+
+    //while (currNode->next) {
+    //    if (currNode->startTrack < endTrack) {
+    //        currNode = currNode->next;
+    //    }
+    //}
+
+    //reCombobulateEmptySpace();
     free(LST);
 };
 
@@ -151,6 +176,9 @@ struct __LSectorTrack* getEmptySpace(int numBlocks) {
                 }
                 pointerMemes->next = jim;
                 pointerMemes = pointerMemes->next;
+                if (i == numBlocks){
+                    pointerMemes->next = NULL;
+                }
             }
             isDone = 1;
         }
