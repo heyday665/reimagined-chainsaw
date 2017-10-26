@@ -115,10 +115,18 @@ struct LEmptyList {
     struct LEmptyNode *tail;
 };
 
-//
+//Need to store each file into a char* to save to disk
 unsigned char* metaDataToArray(){
-    unsigned char* retArray;
-    retArray = malloc(sizeof());
+    //int numFiles = 0;
+    //unsigned char* retArray;
+    //retArray = malloc(sizeof());
+
+    //We don't have the time to implement saving the FS to disk,
+    //as such, it's not here.
+
+    //since most of our data is in ints, we need to use a combination
+    //of four chars and left shifting to get our ints into the right
+    //format for saving to disk.
 };
 
 // Gets distance from _s (start) to _t (target)
