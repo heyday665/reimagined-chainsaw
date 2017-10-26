@@ -116,6 +116,7 @@ struct LEmptyList {
 };
 
 //Need to store each file into a char* to save to disk
+/*
 unsigned char* metaDataToArray(){
     //int numFiles = 0;
     //unsigned char* retArray;
@@ -128,6 +129,7 @@ unsigned char* metaDataToArray(){
     //of four chars and left shifting to get our ints into the right
     //format for saving to disk.
 };
+*/
 
 // Gets distance from _s (start) to _t (target)
 // Return is number of sectors
