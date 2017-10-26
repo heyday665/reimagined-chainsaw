@@ -17,6 +17,45 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 //Perhaps we could do 64 bytes of data to guarantee?
 
+// Memory layout for array to disk
+     /* * * * * * * * *\
+      * name size     *
+      * name size     *
+      * name size     *
+      * name size     *
+      * file_name[0]  *
+      * ........      *
+      * file_name[n]  *
+      * num ST        *
+      * num ST        *
+      * num ST        *
+      * num ST        *
+      * s[0]          *
+      * s[0]          *
+      * s[0]          *
+      * s[0]          *
+      * t[0]          *
+      * t[0]          *
+      * t[0]          *
+      * t[0]          *
+      * ...           *
+      * ...           *
+      * ...           *
+      * ...           *
+      * ...           *
+      * ...           *
+      * ...           *
+      * ...           *
+      * s[n]          *
+      * s[n]          *
+      * s[n]          *
+      * s[n]          *
+      * t[n]          *
+      * t[n]          *
+      * t[n]          *
+      * t[n]          *
+     \* * * * * * * * */
+
 extern int dinit();
 extern int rsector(int t,int s,unsigned char *b);
 extern int wsector(int t,int s,unsigned char *b);
@@ -74,6 +113,12 @@ struct LEmptyList {
     int numEmptyNodes;
     struct LEmptyNode *head;
     struct LEmptyNode *tail;
+};
+
+//
+unsigned char* metaDataToArray(){
+    unsigned char* retArray;
+    retArray = malloc(sizeof());
 };
 
 // Gets distance from _s (start) to _t (target)
